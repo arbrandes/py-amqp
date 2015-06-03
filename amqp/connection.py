@@ -162,7 +162,7 @@ class Connection(AbstractChannel):
         # Let the transport.py module setup the actual
         # socket connection to the broker.
         #
-        self.transport = self.Transport(host, connect_timeout, ssl)
+        self.transport = self.Transport(host, connect_timeout, ssl, kwargs.get('write_timeout'), kwargs.get('read_timeout'))
 
         self.method_reader = MethodReader(self.transport)
         self.method_writer = MethodWriter(self.transport, self.frame_max)
@@ -182,8 +182,8 @@ class Connection(AbstractChannel):
 
         return self._x_open(virtual_host)
 
-    def Transport(self, host, connect_timeout, ssl=False):
-        return create_transport(host, connect_timeout, ssl)
+    def Transport(self, host, connect_timeout, ssl=False, write_timeout=None, read_timeout=None):
+        return create_transport(host, connect_timeout, ssl, write_timeout, read_timeout)
 
     @property
     def connected(self):
